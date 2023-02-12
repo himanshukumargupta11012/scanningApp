@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+  </head>
+  <body>
+    <div class="login">
+      <img src="./elan greenko date.jeg" />
+      <h1>Register</h1>
+      <form action="/signup" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="signup">
+        <p>Name</p>
+        <input type="text" name="name" placeholder="Full Name" required/>
+        <p>Phone Number</p>
+        <input
+          type="number"
+          name="phno"
+          min="5000000000"
+          max="9999999999"
+          placeholder="Phone Number"
+          required
+        />
+        <p>Email</p>
+        <input type="email" name="email" placeholder="Email" required />
+        <p>Password</p>
+        <input type="text" name="password" placeholder="Password" required />
+        <p>Password Again</p>
+        <input type="password" name="cPassword" placeholder="Password"/>
+        <input type="submit" name="" id="" value="Submit">
+
+        <a href="./otp.html"><button type="button" value="submit">Login</button></a>
+        
+        <a href="https://elan.org.in/"><button type="button">Home</button></a>
+      </form>
+      <div>
+        <h1>Login</h1>
+        <form action="/signin" method="POST">
+          {% csrf_token %}
+          <input type="hidden" value="signin">
+          <p>Phone Number</p>
+          <input type="number" name="phno" min="5000000000" max="9999999999" placeholder="Phone Number" required />
+          <!-- <p>Email</p>
+          <input type="email" name="email" placeholder="Email" required /> -->
+          <p>Password</p>
+          <input type="password" name="password" placeholder="Password" required />
+          <input type="submit" name="" id="" value="Submit">
+        
+          <a href="./otp.html"><button type="button" value="submit">Login</button></a>
+        
+          <a href="https://elan.org.in/"><button type="button">Home</button></a>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+/scanningApp_venv
+migrations
+__pycache__
+test.py
+test.html
