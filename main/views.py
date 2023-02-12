@@ -34,38 +34,32 @@ collection.create_index("phno", unique=True)
 def home(request):
   if 'loginStatus' in request.COOKIES and 'phno' in request.COOKIES:
     currPhno=request.COOKIES['phno']
-    print("yes inside the if")
     currData=collection.find_one({'phno':currPhno})
     # generateQrCode(currData.uuid)
+    print(currData)
     return render(request,'index.html',currData)
-  print("outide")
   return render(request,'login.html')
 
 def signup(request):
-  print("currData")
   if request.method=='POST':
-    print("currData")
     currPhno=request.POST.get('phno')
     currName=request.POST.get('name')
     currEmail=request.POST.get('email')
     currPW=request.POST.get('password')
     currCPW=request.POST.get('cPassword')
-    print("currData")
     currUUID=shortuuid.uuid()
-    print("currData")
     if currPW!=currCPW:
-      print("currData2")
       return HttpResponse('password not matching')
     elif collection.find_one({'phno':currPhno}):
-      print("currData2")
       return HttpResponse('number already in use')
-    print("currData2")
     currData={
       'phno':currPhno,
       'name':currName,
       'email':currEmail,
       'password':currPW,
       'uuid':currUUID,
+      'status':False,
+      'times':0
     }
     print(currData)
     collection.insert_one(currData)
@@ -96,3 +90,10 @@ def signin(request):
     return response
     
   return render(request,'login.html')
+
+# logout function
+def logout(request):
+  response=HttpResponseRedirect('/')
+  response.delete_cookie('phno')
+  response.delete_cookie('loginStatus')
+  return response

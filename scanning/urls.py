@@ -4,5 +4,5 @@ from django.urls import path
 
 urlpatterns=[
   path('',views.home),
-  path('startScan',views.scan),
+  # path('startScan',views.scan),
 ]

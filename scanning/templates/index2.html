@@ -5,11 +5,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <form action="/startScan" method="POST">
+<body class="bg-[#28231d]">
+  {%if uuid%}
+
+  <div class='text-white text-3xl my-5 text-center'>{{name}}</div>
+  <div class='text-white text-2xl mb-5 text-center'>{{uuid}}</div>
+  <form action="/scan" method="POST" class="text-center">
     {% csrf_token %}
-    <input type="submit" value="Scan">
+    <input type="submit" value="Scan Again"
+      class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
   </form>
+
+  {% else %}
+
+  <form action="/scan" method="POST" class="text-center">
+    {% csrf_token %}
+    <input type="submit" value="Scan"
+      class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
+  </form>
+  {%endif%}
+
 </body>
 </html>

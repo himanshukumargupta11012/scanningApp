@@ -4,57 +4,68 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Registration</title>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
+
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css_files/style.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
   </head>
   <body>
-    <div class="login">
-      <img src="./elan greenko date.jeg" />
-      <h1>Register</h1>
-      <form action="/signup" method="POST">
-        {% csrf_token %}
-        <input type="hidden" value="signup">
-        <p>Name</p>
-        <input type="text" name="name" placeholder="Full Name" required/>
-        <p>Phone Number</p>
-        <input
-          type="number"
-          name="phno"
-          min="5000000000"
-          max="9999999999"
-          placeholder="Phone Number"
-          required
-        />
-        <p>Email</p>
-        <input type="email" name="email" placeholder="Email" required />
-        <p>Password</p>
-        <input type="text" name="password" placeholder="Password" required />
-        <p>Password Again</p>
-        <input type="password" name="cPassword" placeholder="Password"/>
-        <input type="submit" name="" id="" value="Submit">
+    <div>
+      <button onclick="goToSignin()" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit">Signin</button>
+      <button onclick="goToSignup()" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit">Signup</button>
+    </div>
+    <div class="login mb-5">
+      <img src="{%static 'images/elan greenko date.jpeg'%}" />
 
-        <a href="./otp.html"><button type="button" value="submit">Login</button></a>
-        
-        <a href="https://elan.org.in/"><button type="button">Home</button></a>
-      </form>
-      <div>
+
+      <div  id="signup" style="display: none;">
+        <h1>Register</h1>
+        <form action="/signup" method="POST">
+          {% csrf_token %}
+          <input type="hidden" value="signup">
+          <p>Name</p>
+          <input type="text" name="name" placeholder="Full Name" class="text-black" required />
+          <p>Phone Number</p>
+          <input type="number" name="phno" min="5000000000" max="9999999999" placeholder="Phone Number" required class="text-black"/>
+          <p>Email</p>
+          <input type="email" name="email" placeholder="Email" required class="text-black"/>
+          <p>Password</p>
+          <input type="text" name="password" placeholder="Password" required class="text-black"/>
+          <p>Password Again</p>
+          <input type="password" name="cPassword" placeholder="Password" class="text-black"/>
+          <input type="submit" name="" id="" value="Submit" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit">
+
+        </form>
+      </div>
+      <div id="signin" >
         <h1>Login</h1>
         <form action="/signin" method="POST">
           {% csrf_token %}
           <input type="hidden" value="signin">
           <p>Phone Number</p>
-          <input type="number" name="phno" min="5000000000" max="9999999999" placeholder="Phone Number" required />
-          <!-- <p>Email</p>
-          <input type="email" name="email" placeholder="Email" required /> -->
+          <input type="number" name="phno" min="5000000000" max="9999999999" placeholder="Phone Number" required class="text-black"/>
           <p>Password</p>
-          <input type="password" name="password" placeholder="Password" required />
-          <input type="submit" name="" id="" value="Submit">
-        
-          <a href="./otp.html"><button type="button" value="submit">Login</button></a>
-        
-          <a href="https://elan.org.in/"><button type="button">Home</button></a>
+          <input type="password" name="password" placeholder="Password" required class="text-black"/>
+          <input type="submit" name="" id="" value="Submit" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit">
         </form>
       </div>
     </div>
+
+    <script>
+      signup = document.getElementById("signup")
+        signin = document.getElementById("signin")
+      goToSignin=()=>{
+        signin.style.display='block';
+        signup.style.display = 'none';
+      }
+      goToSignup = () => {
+          signin.style.display = 'none';
+          signup.style.display = 'block';
+          
+        }
+    </script>
   </body>
 </html>

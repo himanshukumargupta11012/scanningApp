@@ -5,7 +5,6 @@ import shortuuid
 import qrcode
 
 import cv2
-import numpy as np
 from pyzbar.pyzbar import decode
 # Create your views here.
 
@@ -37,49 +36,41 @@ collection.create_index("phno", unique=True)
 
 
 
-
 def home(request):
-  return render(request,'index2.html')
+  if request.method=='POST':
 
-def scan(request):
+    cap = cv2.VideoCapture(0)
 
+    while True:
+      global currUUID
+      ret, frame = cap.read()
 
-  cap = cv2.VideoCapture(0)
+      # # Convert the frame to grayscale
+      gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-  while True:
-    global currUUID
-    ret, frame = cap.read()
+      data = decode(frame)
 
-    # Convert the frame to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # Decode the QR code
-    data = decode(gray)
-    if len(data)>0:
-      print(data[0].data.decode("utf-8"))
-      currUUID=data[0].data.decode("utf-8")
-    if len(data)==1:
-      break
-    for qr_code in data:
-
-        (x, y, w, h) = qr_code.rect
-        print(x,y,w,h)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
-        cv2.putText(frame, qr_code.data.decode("utf-8"), (x, y - 10),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-    cv2.imshow("QR Code Scanner", frame)
-
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
+      if len(data)==1:
+        currUUID=data[0].data.decode("utf-8")
         break
 
-  cap.release()
-  cv2.destroyAllWindows()
+      cv2.imshow("QR Code Scanner", frame)
 
-  currData=collection.find_one({'uuid':currUUID})
-  if not currData:
-    return HttpResponse('QR code not matching')
-  
-  return HttpResponseRedirect(request,'/',currData)
+      key = cv2.waitKey(1) & 0xFF
+      if key == ord("q"):
+          break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    currData=collection.find_one({'uuid':currUUID})
+
+    if not currData:
+      return HttpResponse('QR code not matching')
+    if currData['status']==0:
+      collection.update_one({'uuid':currUUID},{ "$set": { "status": True,},"$inc":{"times":1}  })
+    else:
+      collection.update_one({'uuid':currUUID},{ "$set": { "status": False,  } })
+    return render(request,'index2.html',currData)
+  return render(request,'index2.html')
 

@@ -4,7 +4,7 @@
   font-family: sans-serif;
 }
 body {
-  background-color: #28231d;
+  background-color: #a16b28;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +14,7 @@ body {
   width: 50%;
 
   position: relative;
-  color: #fff;
+  /* color: #fff; */
 }
 .login img {
   position: relative;
@@ -32,7 +32,8 @@ body {
   font-size: 20px;
   margin: 15px 0;
 }
-.login input {
+input {
+  color: black;
   font-size: 16px;
   width: 95%;
   padding: 15px 10px;
