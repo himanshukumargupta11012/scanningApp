@@ -5,13 +5,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-
+  {%load static%}
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css_files/style.css' %}">
+
 </head>
-<body class="bg-[#28231d]">
+<body class="bg-[#473620]">
+  <form action="/scan/logoutAdmin" class="text-center">
+    <input type="submit" value="Logout from Admin"
+      class="text-white bg-[#a16b28] rounded px-3 py-1 mt-5 hover:cursor-pointer">
+  </form>
   {%if uuid%}
 
-  <div class='text-white text-3xl my-5 text-center'>{{name}}</div>
+  <div class='text-white text-3xl text-center'>{{name}}</div>
+
+  {%if status%}
+  <div class='text-white text-3xl my-5 text-center'>Exited</div>
+  {%else%}
+  <div class='text-white text-3xl my-5 text-center'>Entered</div>
+{%endif%}
   <div class='text-white text-2xl mb-5 text-center'>{{uuid}}</div>
   <form action="/scan" method="POST" class="text-center">
     {% csrf_token %}

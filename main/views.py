@@ -3,6 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 import pymongo
 import shortuuid
 import qrcode
+import random
+import string
+# from sms import send_sms
+
 # Create your views here.
 
 
@@ -21,9 +25,8 @@ def generateQrCode(uuid):
 
 
 
-# client = pymongo.MongoClient('mongodb+srv://username:password@HOSTNAME/DATABASE_NAME?authSource=admin&tls=true&tlsCAFile=<PATH_TO_CA_FILE>')
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-
+client = pymongo.MongoClient("mongodb+srv://administrator:Himanshu%40iith@scanningapp.d4ayche.mongodb.net/?retryWrites=true&w=majority")
+# client = pymongo.MongoClient("mongodb://localhost:27017/")
 
 dbname = client['scanData']
 collection = dbname['users']
@@ -40,6 +43,12 @@ def home(request):
     return render(request,'index.html',currData)
   return render(request,'login.html')
 
+
+def otpGeneration():
+  length=6
+  return ''.join(random.choice(string.digits) for _ in range(length))
+
+
 def signup(request):
   if request.method=='POST':
     currPhno=request.POST.get('phno')
@@ -48,6 +57,9 @@ def signup(request):
     currPW=request.POST.get('password')
     currCPW=request.POST.get('cPassword')
     currUUID=shortuuid.uuid()
+    currOTP=otpGeneration()
+    
+
     if currPW!=currCPW:
       return HttpResponse('password not matching')
     elif collection.find_one({'phno':currPhno}):
@@ -58,17 +70,37 @@ def signup(request):
       'email':currEmail,
       'password':currPW,
       'uuid':currUUID,
+      'otp':currOTP,
       'status':False,
       'times':0
     }
-    print(currData)
     collection.insert_one(currData)
+
+    # send_sms(currPhno, 'Your OTP is: {}'.format(currOTP))
+    # return render(request,'otp.html',currData)
+    
     response=HttpResponseRedirect('/',currData)
     response.set_cookie('phno',currPhno)
     response.set_cookie('loginStatus',True)
     return response
     
   return render(request,'login.html')
+
+
+# def verifyOtp(request):
+#   if request.method=='POST':
+#     gotPhno=request.POST.get('phno')
+#     gotOtp=request.POST.get('phno')
+
+#     currData=collection.find_one({'phno':gotPhno})
+
+#     if currData['otp']!=gotOtp:
+#       return HttpResponse('otp verification failed')
+    
+#     response=HttpResponseRedirect('/',currData)
+#     response.set_cookie('phno',gotPhno)
+#     response.set_cookie('loginStatus',True)
+#     return response
 
 
 def signin(request):

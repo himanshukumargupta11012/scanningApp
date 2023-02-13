@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'scanning',
+    'sms',
 ]
 
 MIDDLEWARE = [
@@ -123,12 +124,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# STATIC_URL='/static/'
-
-# STATICFILES_DIRS=[
-#     # os.path.join(BASE_DIR,"main/css_files"),
-#     # os.path.join(BASE_DIR,"scanning/css_files"),
-#     # os.path.join(BASE_DIR,"css_files"),
-# ]

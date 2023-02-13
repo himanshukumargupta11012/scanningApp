@@ -11,14 +11,15 @@
     <div class="login">
         <img src="./elan greenko date.png" />
         <h1>Register</h1>
-        <form actions="#" methods="" post>
+        <form actions="/verifyOtp" methods="POST">
           <p>Enter OTP</p>
-          <input type="text" name="user" placeholder="OTP" required/>
+          <input type="text" name="otp" placeholder="OTP" required/>
+          <input type="hidden" name="phno" id="phno" value="{{phno}}">
           
-          <button type="submit">Submit</button>
+          <input type="submit">Submit</input>
           
-          <a href="https://elan.org.in/"><button type="button">Home</button></a>
         </form>
+        <a href="https://elan.org.in/"><button type="button">Home</button></a>
       </div>
     
 </body>
