@@ -52,6 +52,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_HOST_USER=''
+EMAIL_HOST_PASSWORD=''
+EMAIL_POST=587
+EMAIL_USE_TLS=True
+
 ROOT_URLCONF = 'scanningApp.urls'
 
 TEMPLATES = [

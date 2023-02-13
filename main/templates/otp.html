@@ -5,21 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css_files/style.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div class="login">
-        <img src="./elan greenko date.png" />
-        <h1>Register</h1>
-        <form actions="/verifyOtp" methods="POST">
+      <a href="https://elan.org.in/"><img src="{%static 'images/logo_white.png'%}" /></a>
+        
+        <h1>OTP Verification</h1>
+        <form action="/verifyOtp" method="POST">
+          {% csrf_token %}
           <p>Enter OTP</p>
           <input type="text" name="otp" placeholder="OTP" required/>
           <input type="hidden" name="phno" id="phno" value="{{phno}}">
           
-          <input type="submit">Submit</input>
+          <input type="submit" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit hover:cursor-pointer"></input>
           
         </form>
-        <a href="https://elan.org.in/"><button type="button">Home</button></a>
+        
       </div>
     
 </body>

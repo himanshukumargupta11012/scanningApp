@@ -5,6 +5,7 @@
   color: white;
 }
 body {
+  padding: 1rem;
   background-color:#473620;
   display: flex;
   flex-direction: column;
@@ -12,15 +13,17 @@ body {
 }
 
 .login {
-  width: 50%;
+  /* width: 50%; */
 
-  position: relative;
+  /* position: relative; */
   /* color: #fff; */
 }
-.login img {
-  position: relative;
-  width: 100%;
-  margin-top: 10%;
+img {
+  text-align: center;
+  width: 100px;
+  /* position: relative; */
+  /* width: 100%; */
+  /* margin-top: 10%; */
   align-items: center;
 }
 .login h1 {

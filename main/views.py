@@ -5,9 +5,8 @@ import shortuuid
 import qrcode
 import random
 import string
+from django.core.mail import send_mail
 # from sms import send_sms
-
-# Create your views here.
 
 
 
@@ -21,8 +20,6 @@ def generateQrCode(uuid):
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
-    # img.save("qr_code.png")
-
 
 
 client = pymongo.MongoClient("mongodb+srv://administrator:Himanshu%40iith@scanningapp.d4ayche.mongodb.net/?retryWrites=true&w=majority")
@@ -32,14 +29,13 @@ dbname = client['scanData']
 collection = dbname['users']
 
 collection.create_index("phno", unique=True)
-
+collection.create_index("email", unique=True)
 
 def home(request):
   if 'loginStatus' in request.COOKIES and 'phno' in request.COOKIES:
     currPhno=request.COOKIES['phno']
     currData=collection.find_one({'phno':currPhno})
     # generateQrCode(currData.uuid)
-    print(currData)
     return render(request,'index.html',currData)
   return render(request,'login.html')
 
@@ -62,8 +58,14 @@ def signup(request):
 
     if currPW!=currCPW:
       return HttpResponse('password not matching')
-    elif collection.find_one({'phno':currPhno}):
+    elif collection.find_one({'phno':currPhno,'verified':True}):
       return HttpResponse('number already in use')
+    elif collection.find_one({'email':currEmail,'verified':True}):
+      return HttpResponse('mail-id already in use')
+    elif collection.find_one({'phno':currPhno}):
+      collection.delete_one({'phno':currPhno})
+    elif collection.find_one({'email':currEmail}):
+      collection.delete_one({'phno':currEmail})
     currData={
       'phno':currPhno,
       'name':currName,
@@ -72,56 +74,55 @@ def signup(request):
       'uuid':currUUID,
       'otp':currOTP,
       'status':False,
-      'times':0
+      'times':0,
+      'verified':False
     }
     collection.insert_one(currData)
-
-    # send_sms(currPhno, 'Your OTP is: {}'.format(currOTP))
-    # return render(request,'otp.html',currData)
     
-    response=HttpResponseRedirect('/',currData)
-    response.set_cookie('phno',currPhno)
-    response.set_cookie('loginStatus',True)
-    return response
+
+    res = send_mail("Email Verification", "OTP for email verification is : "+currOTP, "", [currEmail])
+
+    return render(request,'otp.html',currData)
     
   return render(request,'login.html')
 
 
-# def verifyOtp(request):
-#   if request.method=='POST':
-#     gotPhno=request.POST.get('phno')
-#     gotOtp=request.POST.get('phno')
+def verifyOtp(request):
+  if request.method=='POST':
+    gotPhno=request.POST.get('phno')
+    gotOtp=request.POST.get('otp')
+    currData=collection.find_one({'phno':gotPhno})
+    if currData['otp']!=gotOtp:
 
-#     currData=collection.find_one({'phno':gotPhno})
+      collection.delete_one({'phno':gotPhno})
+      return HttpResponse('otp verification failed')
 
-#     if currData['otp']!=gotOtp:
-#       return HttpResponse('otp verification failed')
-    
-#     response=HttpResponseRedirect('/',currData)
-#     response.set_cookie('phno',gotPhno)
-#     response.set_cookie('loginStatus',True)
-#     return response
+    collection.update_one({'phno':gotPhno},{'$set':{'verified':True},'$unset':{'otp':''}})
+    response=HttpResponseRedirect('/',currData)
+    response.set_cookie('phno',gotPhno)
+    response.set_cookie('loginStatus',True)
+    return response
 
 
 def signin(request):
   if request.method=='POST':
     currPhno=request.POST.get('phno')
     currPW=request.POST.get('password')
-    currData=collection.find_one({'phno':currPhno})
-    print(currData)
+    currData=collection.find_one({'phno':currPhno,'verified':True})
     if not currData:
       return HttpResponse('number not exist')
 
     elif currPW!=currData['password']:
       return HttpResponse('password not matching')
 
-    print(currData)
     response=HttpResponseRedirect('/',currData)
     response.set_cookie('phno',currPhno)
     response.set_cookie('loginStatus',True)
     return response
     
   return render(request,'login.html')
+
+
 
 # logout function
 def logout(request):
