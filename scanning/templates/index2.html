@@ -8,6 +8,9 @@
   {%load static%}
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'css_files/style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-reader@2.0.1/dist/index.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+
 
 </head>
 <body class="bg-[#473620]">
@@ -16,6 +19,7 @@
     <input type="submit" value="Logout from Admin"
       class="text-white bg-[#a16b28] rounded px-3 py-1 mt-5 hover:cursor-pointer">
   </form>
+
   {%if uuid%}
 
   <div class='text-white text-3xl text-center'>{{name}}</div>
@@ -26,20 +30,45 @@
   <div class='text-white text-3xl my-5 text-center'>Entered</div>
 {%endif%}
   <div class='text-white text-2xl mb-5 text-center'>{{uuid}}</div>
-  <form action="/scan" method="POST" class="text-center">
-    {% csrf_token %}
-    <input type="submit" value="Scan Again"
-      class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
-  </form>
 
   {% else %}
 
-  <form action="/scan" method="POST" class="text-center">
-    {% csrf_token %}
-    <input type="submit" value="Scan"
-      class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
-  </form>
+  
   {%endif%}
+  <form action="/scan" method="POST" class="text-center hidden">
+    {% csrf_token %}
+    <input type="hidden" id="uuid" name="gotUUID">
+    <input type="submit" value="Scan" id="jsclick" class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
+  </form>
+  <div id="qr-reader" class="mt-5" style="width: 600px"></div>
 
+  <script>
+            const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            function onScanSuccess(decodedText, decodedResult) {
+              console.log(decodedText);
+              // fetch('/scan', {
+              //   method: 'POST',
+              //   headers: {
+              //     'Content-Type': 'application/json',
+              //     'X-CSRFToken': csrfToken
+              //   },
+              //   body: JSON.stringify({
+
+              //     'gotUUID': decodedText,
+              //     // 'another_key': 'another_value'
+              //   })
+              // })
+              html5QrcodeScanner.clear();
+              document.getElementById('uuid').value=decodedText
+              document.getElementById('jsclick').click()
+
+            }
+            var html5QrcodeScanner = new Html5QrcodeScanner(
+              "qr-reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess);
+        
+
+          
+  </script>
 </body>
 </html>

@@ -2,24 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 import pymongo
 import shortuuid
-import qrcode
 import random
 import string
 from django.core.mail import send_mail
 # from sms import send_sms
-
-
-
-def generateQrCode(uuid):
-    qr = qrcode.QRCode(
-        version=1,
-        box_size=10,
-        border=5
-    )
-    qr.add_data(str(uuid))
-    qr.make(fit=True)
-
-    img = qr.make_image(fill_color="black", back_color="white")
 
 
 client = pymongo.MongoClient("mongodb+srv://administrator:Himanshu%40iith@scanningapp.d4ayche.mongodb.net/?retryWrites=true&w=majority")
