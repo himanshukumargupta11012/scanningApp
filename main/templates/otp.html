@@ -10,14 +10,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div class="login">
-      <a href="https://elan.org.in/"><img src="{%static 'images/logo_white.png'%}" /></a>
+    <div class="login flex flex-col">
+      <a class="m-auto" href="https://elan.org.in/"><img src="{%static 'images/logo_white.png'%}" /></a>
         
         <h1>OTP Verification</h1>
         <form action="/verifyOtp" method="POST">
           {% csrf_token %}
           <p>Enter OTP</p>
-          <input type="text" name="otp" placeholder="OTP" required/>
+          <input type="text" class="text-black" name="otp" placeholder="OTP" required/>
           <input type="hidden" name="phno" id="phno" value="{{phno}}">
           
           <input type="submit" class="text-white text-left ml-0 bg-[#a16b28] rounded p-2 mt-5 w-fit hover:cursor-pointer"></input>

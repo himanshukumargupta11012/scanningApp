@@ -80,7 +80,12 @@ def signup(request):
     collection.insert_one(currData)
     
 
-    res = send_mail("Email Verification", "OTP for email verification is : "+currOTP, "", [currEmail])
+    res = send_mail(
+      "OTP for Email Verification", 
+      "OTP for email verification is: "+currOTP+"\n\nRegards, \nTeam Elan & ηVision, IIT Hyderabad",
+      "" ,
+      [currEmail]
+    )
 
     return render(request,'otp.html',currData)
     
@@ -110,10 +115,10 @@ def signin(request):
     currPW=request.POST.get('password')
     currData=collection.find_one({'phno':currPhno,'verified':True})
     if not currData:
-      return HttpResponse('number not exist')
+      return HttpResponse("Mobile Number doesn't exist or your email is not verified.")
 
     elif currPW!=currData['password']:
-      return HttpResponse('password not matching')
+      return HttpResponse('Incorrect password.')
 
     response=HttpResponseRedirect('/',currData)
     response.set_cookie('phno',currPhno)

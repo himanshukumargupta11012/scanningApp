@@ -3,3 +3,4 @@ migrations
 __pycache__
 test.py
 test.html
+scanning_app_env
