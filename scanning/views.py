@@ -57,7 +57,7 @@ def home(request):
         currUUID=data[0].data.decode("utf-8")
         break
 
-      cv2.imshow("QR Code Scanner", frame)
+      # cv2.imshow("QR Code Scanner", frame)
 
       key = cv2.waitKey(1) & 0xFF
       if key == ord("q"):
