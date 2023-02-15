@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{% static 'css_files/style.css' %}">
   <script src="https://cdn.jsdelivr.net/npm/qrcode-reader@2.0.1/dist/index.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
-
+  <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
 
 </head>
 <body class="bg-[#473620]">
@@ -40,34 +40,103 @@
     <input type="hidden" id="uuid" name="gotUUID">
     <input type="submit" value="Scan" id="jsclick" class="text-white  bg-[#a16b28] rounded py-2 mt-5 px-3 m-auto hover:cursor-pointer">
   </form>
-  <div id="qr-reader" class="mt-5" style="width: 600px"></div>
+  <div class="flex">
+    <button onclick="stopScanner()" class="text-white bg-[#a16b28] rounded px-3 py-1 mt-5 hover:cursor-pointer mx-1">
+      Stop</button>
+    <button onclick="startScanner()" class="text-white bg-[#a16b28] rounded px-3 py-1 mt-5 hover:cursor-pointer mx-1">
+      Start</button>
+    
+  </div>
+  <div id="reader" class="mt-5" style="width: 600px"></div>
+  
 
   <script>
-            const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            function onScanSuccess(decodedText, decodedResult) {
-              console.log(decodedText);
-              // fetch('/scan', {
-              //   method: 'POST',
-              //   headers: {
-              //     'Content-Type': 'application/json',
-              //     'X-CSRFToken': csrfToken
-              //   },
-              //   body: JSON.stringify({
+            // // const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            // function onScanSuccess(decodedText, decodedResult) {
+            //   // fetch('/scan', {
+            //   //   method: 'POST',
+            //   //   headers: {
+            //   //     'Content-Type': 'application/json',
+            //   //     'X-CSRFToken': csrfToken
+            //   //   },
+            //   //   body: JSON.stringify({
 
-              //     'gotUUID': decodedText,
-              //     // 'another_key': 'another_value'
-              //   })
-              // })
-              html5QrcodeScanner.clear();
-              document.getElementById('uuid').value=decodedText
-              document.getElementById('jsclick').click()
+            //   //     'gotUUID': decodedText,
+            //   //     // 'another_key': 'another_value'
+            //   //   })
+            //   // })
+            //   html5QrcodeScanner.clear();
+            //   document.getElementById('uuid').value=decodedText
+            //   document.getElementById('jsclick').click()
 
-            }
-            var html5QrcodeScanner = new Html5QrcodeScanner(
-              "qr-reader", { fps: 10, qrbox: 250 });
-            html5QrcodeScanner.render(onScanSuccess);
+            // }
+            // var html5QrcodeScanner = new Html5QrcodeScanner(
+            //   "reader", { fps: 10, qrbox: 250 });
+            // html5QrcodeScanner.render(onScanSuccess);
         
 
+
+
+  // This method will trigger user permissions
+  Html5Qrcode.getCameras().then(devices => {
+    /**
+     * devices would be an array of objects of type:
+     * { id: "id", label: "label" }
+     */
+    if (devices && devices.length) {
+      var cameraId = devices[0].id;
+      
+
+      const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+
+      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+      qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        html5QrCode.stop();
+        document.getElementById('uuid').value = decodedText
+        document.getElementById('jsclick').click()
+      };
+      html5QrCode.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,    // Optional, frame per seconds for qr code scanning
+          qrbox: 250 // Optional, if you want bounded box UI
+        },
+        qrCodeSuccessCallback,
+        (errorMessage) => {
+          // parse error, ignore it.
+        })
+        .catch((err) => {
+          // Start failed, handle it.
+        });
+      startScanner=()=>{
+        html5QrCode.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,    // Optional, frame per seconds for qr code scanning
+            qrbox: 250 // Optional, if you want bounded box UI
+          },
+          qrCodeSuccessCallback,
+          (errorMessage) => {
+            // parse error, ignore it.
+          })
+          .catch((err) => {
+            // Start failed, handle it.
+          });
+      }
+      
+        stopScanner=()=>{
+          html5QrCode.stop()
+        }
+        
+    }
+  }).catch(err => {
+    // handle err
+  });
+
+  
+
+  
           
   </script>
 </body>

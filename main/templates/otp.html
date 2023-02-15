@@ -16,7 +16,7 @@
         <h1>OTP Verification</h1>
         <form action="/verifyOtp" method="POST">
           {% csrf_token %}
-          <p>Enter OTP</p>
+          <p>Enter OTP sent to your mail-id</p>
           <input type="text" class="text-black" name="otp" placeholder="OTP" required/>
           <input type="hidden" name="phno" id="phno" value="{{phno}}">
           
