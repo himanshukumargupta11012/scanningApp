@@ -82,11 +82,13 @@ def verifyOtp(request):
   if request.method=='POST':
     gotPhno=request.POST.get('phno')
     gotOtp=request.POST.get('otp')
+    print(gotPhno,gotOtp)
     currData=collection.find_one({'phno':gotPhno})
+    print(currData)
     if currData['otp']!=gotOtp:
 
-      collection.delete_one({'phno':gotPhno})
-      return HttpResponse('otp verification failed')
+      # collection.delete_one({'phno':gotPhno})
+      return HttpResponse('otp verification failed. Signup again')
 
     collection.update_one({'phno':gotPhno},{'$set':{'verified':True},'$unset':{'otp':''}})
     response=HttpResponseRedirect('/',currData)

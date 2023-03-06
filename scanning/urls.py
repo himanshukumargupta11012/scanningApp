@@ -4,6 +4,6 @@ from django.urls import path
 
 urlpatterns=[
   path('',views.home),
-  path('/verifyPassword',views.verifyPassword),
-  path('/logoutAdmin',views.logout),
+  path('verifyPassword',views.verifyPassword),
+  path('logoutAdmin',views.logout),
 ]
